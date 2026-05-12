@@ -1,0 +1,151 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+class Student {
+private:
+    int rollNo;
+    string name;
+    float marks;
+
+public:
+    void addStudent() {
+        ofstream file("students.txt", ios::app);
+
+        cout << "\nEnter Roll Number: ";
+        cin >> rollNo;
+
+        cin.ignore();
+
+        cout << "Enter Name: ";
+        getline(cin, name);
+
+        cout << "Enter Marks: ";
+        cin >> marks;
+
+        file << rollNo << endl;
+        file << name << endl;
+        file << marks << endl;
+
+        file.close();
+
+        cout << "\nStudent Record Saved Successfully!\n";
+    }
+
+    void displayStudents() {
+        ifstream file("students.txt");
+
+        if (!file) {
+            cout << "\nNo Record Found!\n";
+            return;
+        }
+
+        cout << "\n===== Student Records =====\n";
+
+        while (file >> rollNo) {
+            file.ignore();
+
+            getline(file, name);
+
+            file >> marks;
+
+            cout << "\nRoll Number : " << rollNo;
+            cout << "\nName        : " << name;
+            cout << "\nMarks       : " << marks;
+
+            if (marks >= 40)
+                cout << "\nAdmission Status : Selected\n";
+            else
+                cout << "\nAdmission Status : Rejected\n";
+        }
+
+        file.close();
+    }
+
+    void searchStudent() {
+        int searchRoll;
+        bool found = false;
+
+        ifstream file("students.txt");
+
+        if (!file) {
+            cout << "\nNo Record Found!\n";
+            return;
+        }
+
+        cout << "\nEnter Roll Number to Search: ";
+        cin >> searchRoll;
+
+        while (file >> rollNo) {
+            file.ignore();
+
+            getline(file, name);
+
+            file >> marks;
+
+            if (rollNo == searchRoll) {
+                cout << "\n===== Student Found =====\n";
+
+                cout << "Roll Number : " << rollNo << endl;
+                cout << "Name        : " << name << endl;
+                cout << "Marks       : " << marks << endl;
+
+                if (marks >= 40)
+                    cout << "Admission Status : Selected\n";
+                else
+                    cout << "Admission Status : Rejected\n";
+
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+            cout << "\nStudent Not Found!\n";
+
+        file.close();
+    }
+};
+
+int main() {
+    Student s;
+
+    int choice;
+
+    do {
+        cout << "\n\n===== SCHOOL ADMISSION SYSTEM =====\n";
+
+        cout << "1. Add Student\n";
+        cout << "2. Display All Students\n";
+        cout << "3. Search Student\n";
+        cout << "4. Exit\n";
+
+        cout << "\nEnter Your Choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            s.addStudent();
+            break;
+
+        case 2:
+            s.displayStudents();
+            break;
+
+        case 3:
+            s.searchStudent();
+            break;
+
+        case 4:
+            cout << "\nExiting Program...\n";
+            break;
+
+        default:
+            cout << "\nInvalid Choice!\n";
+        }
+
+    } while (choice != 4);
+
+    return 0;
+}
